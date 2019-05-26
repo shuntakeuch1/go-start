@@ -5,6 +5,7 @@ import (
 	"io"
 )
 
+// Tracerはコード内での出来事を記録できるオブジェクトを表すインタフェースです。
 type Tracer interface {
 	Trace(...interface{})
 }
@@ -18,8 +19,8 @@ type tracer struct {
 }
 
 func (t *tracer) Trace(a ...interface{}) {
-	fmt.Fprint(t.out, a...)
-	fmt.Fprintln(t.out)
+	t.out.Write([]byte(fmt.Sprint(a...)))
+	t.out.Write([]byte("\n"))
 }
 
 type nilTracer struct{}
@@ -30,3 +31,4 @@ func (t *nilTracer) Trace(a ...interface{}) {}
 func Off() Tracer {
 	return &nilTracer{}
 }
+
