@@ -4,9 +4,12 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
+
+	"github.com/shuntakeuch1/go-start/trace"
 )
 
 // templは1つのテンプレートを表します
@@ -28,8 +31,10 @@ func main() {
 	var addr = flag.String("addr", ":8080", "アプリケーションのアドレス")
 	flag.Parse()
 	r := newRoom()
+	r.tracer = trace.New(os.Stdout)
+
 	http.Handle("/", &templateHandler{filename: "chat.html"})
-	http.Handle("/room", r)
+	http.Handle("/rom", r)
 	// チャットルームを開始します
 	go r.run()
 	// Webサーバーを開始します
